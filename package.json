@@ -1,0 +1,41 @@
+{
+  "name": "express-prisma-mongo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "babel index.js -d dist && babel  src/ -d dist/src",
+    "start": "npm run build && dotenv -e dev.env  babel-watch index.js",
+    "start:local": "dotenv -e local.env babel-watch index.js",
+    "start:dev": "dotenv -e dev.env babel-watch index.js",
+    "start:qa": "dotenv -e qa.env babel-watch index.js",
+    "start:stage": "npm run build && dotenv -e stage.env babel-watch index.js",
+    "start:prod": "npm run build && dotenv -e prod.env babel-watch index.js",
+    "release:dev": "npm run build &&  dotenv -e dev.env node dist/index.js",
+    "release:qa": "npm run build && dotenv -e qa.env node dist/index.js",
+    "release:stage": "npm run build && dotenv -e stage.env node dist/index.js",
+    "release:prod": "npm run build && dotenv -e prod.env node dist/index.js"
+  },
+  "keywords": [],
+  "author": "Mr.AnOnYmOuS",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/cli": "^7.20.7",
+    "@babel/core": "^7.20.12",
+    "@babel/preset-env": "^7.20.2",
+    "babel-watch": "^7.7.2",
+    "nodemon": "^2.0.20",
+    "prisma": "^4.9.0"
+  },
+  "dependencies": {
+    "@prisma/client": "^4.9.0",
+    "aws-sdk": "^2.1300.0",
+    "bcrypt": "^5.1.0",
+    "cors": "^2.8.5",
+    "dotenv-cli": "^7.0.0",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.0",
+    "multer": "^1.4.5-lts.1",
+    "uuid": "^9.0.0"
+  }
+}

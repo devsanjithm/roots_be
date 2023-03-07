@@ -1,0 +1,128 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model Category {
+  id         String       @id @default(auto()) @map("_id") @db.ObjectId
+  name       String
+  status     Boolean      @default(true)
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+  deletedAt  DateTime?
+  Department Department[]
+  Complaint  Complaint[]
+}
+
+model Department {
+  id        String      @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  Parent    Category    @relation(fields: [parent], references: [id])
+  parent    String      @db.ObjectId
+  status    Boolean     @default(true)
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  deletedAt DateTime?
+  Complaint Complaint[]
+}
+
+model Hazard {
+  id        String      @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  status    Boolean     @default(true)
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  deletedAt DateTime?
+  Complaint Complaint[]
+}
+
+model Rank {
+  id        String      @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  min       Int
+  max       Int
+  status    Boolean     @default(true)
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  deletedAt DateTime?
+  Complaint Complaint[]
+}
+
+model Roles {
+  id        String      @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  level     Int
+  status    Boolean     @default(true)
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  deletedAt DateTime?
+  UserRoles UserRoles[]
+  User      User[]
+  Complaint Complaint[]
+}
+
+model User {
+  id          String      @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  email       String      @unique
+  password    String
+  phone       Int
+  CurrentRole Roles       @relation(fields: [currentRole], references: [id])
+  currentRole String      @db.ObjectId
+  status      Boolean     @default(true)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  deletedAt   DateTime?
+  UserRoles   UserRoles[]
+  Complaint   Complaint[]
+}
+
+model UserRoles {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String    @db.ObjectId
+  roleId    String    @db.ObjectId
+  UserId    User      @relation(fields: [userId], references: [id])
+  RoleId    Roles     @relation(fields: [roleId], references: [id])
+  status    Boolean   @default(true)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+}
+
+enum LEVELS {
+  open
+  issued
+  solved
+  closed
+}
+
+model Complaint {
+  id              String      @id @default(auto()) @map("_id") @db.ObjectId
+  login           String      @db.ObjectId
+  Login           User        @relation(fields: [login], references: [id])
+  category        String?     @db.ObjectId
+  Category        Category?   @relation(fields: [category], references: [id])
+  department      String?     @db.ObjectId
+  Department      Department? @relation(fields: [department], references: [id])
+  openImage       String
+  description     String
+  complaintstatus LEVELS      @default(open)
+  hazard          String      @db.ObjectId
+  Hazard          Hazard      @relation(fields: [hazard], references: [id])
+  role            String      @db.ObjectId
+  Role            Roles       @relation(fields: [role], references: [id])
+  rank            String?     @db.ObjectId
+  Rank            Rank?       @relation(fields: [rank], references: [id])
+  name            String
+  closedDate      DateTime?
+  closeImage      String?
+  email           String
+  status          Boolean     @default(true)
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  deletedAt       DateTime?
+}
